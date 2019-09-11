@@ -45,3 +45,23 @@ services:
     depends_on: 
       - elasticsearch
 
+  logstash:
+    image: logstash:7.3.1
+    container_name: logstash
+
+    ports: 
+      - 9600:9600
+      - 5044:5044
+
+  logstash:
+    image: logstash:7.3.1
+    container_name: logstash
+    # environment:
+      # - LOGSTASH_JDBC_URL_EXP=jdbc:mysql://10.0.0.4:3306/exp@staging?useSSL=false
+      # - LOGSTASH_JDBC_USERNAME=readonly
+      # - LOGSTASH_JDBC_PASSWORD=readonly0919
+    volumes: 
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports: 
+      - 9600:9600
+      - 5044:5044
