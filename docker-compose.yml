@@ -16,7 +16,7 @@ services:
     container_name: redis
     restart: always
     ports:
-      - "6379:6379"
+      - 6379:6379
     volumes:
       - ./data/redis:/data
 
@@ -31,7 +31,6 @@ services:
       - transport.host=127.0.0.1
       - cluster.name=search
       - discovery.type=single-node
-      - ELASTIC_PASSWORD=password
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - ./data/elasticsearch:/usr/share/elasticsearch/data
@@ -43,7 +42,6 @@ services:
       - 5601:5601
     environment:
       ELASTICSEARCH_USER: elastic
-      ELASTICSEARCH_PASSWORD: password
       I18N_LOCALE: zh-CN
     depends_on: 
       - elasticsearch
@@ -52,9 +50,7 @@ services:
     image: logstash:7.3.1
     container_name: logstash
     environment:
-      ELASTICSEARCH_HOST: localhost
-      ELASTICSEARCH_USER: elastic
-      ELASTICSEARCH_PASSWORD: password
+      ELASTICSEARCH_HOST: localhost:9200
     volumes: 
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     ports: 
@@ -68,7 +64,5 @@ services:
     image: docker.elastic.co/beats/filebeat:7.3.1
     container_name: filebeat
     environment:
-      SETUP_KIBANA_HOST: localhost:5601
-      OUTPUT_ELASTICSEARCH_HOST: localhost:9200
-      OUTPUT_ELASTICSEARCH_USERNAME: elastic
-      OUTPUT_ELASTICSEARCH_PASSWORD: password
+      KIBANA_HOST: localhost:5601
+      ELASTICSEARCH_HOST: localhost:9200

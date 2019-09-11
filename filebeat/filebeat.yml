@@ -1,0 +1,4 @@
+output.elasticsearch:
+  hosts: ["${ELASTICSEARCH_HOST}"]
+setup.kibana:
+  host: "${KIBANA_HOST}"
