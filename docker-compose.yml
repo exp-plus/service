@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: main
       MYSQL_ROOT_PASSWORD: password
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
   redis:
     image: redis:4.0
     container_name: redis
@@ -18,7 +18,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./redis-data:/data
+      - ./data/redis:/data
 
 
   elasticsearch:
@@ -33,13 +33,15 @@ services:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
-      - ./elasticsearch-data/:/usr/share/elasticsearch/data
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
 
   kibana:
     image: kibana:7.3.1
     container_name: kibana
     ports:
       - 5601:5601
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on: 
       - elasticsearch
 
