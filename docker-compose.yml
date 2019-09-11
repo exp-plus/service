@@ -20,54 +20,12 @@ services:
     volumes:
       - ./data/redis:/data
 
-
-  elasticsearch:
-    image: elasticsearch:7.3.1
-    container_name: elasticsearch
-    ports:
-      - 9300:9300
-      - 9200:9200
-    environment:
-      - transport.host=127.0.0.1
-      - cluster.name=search
-      - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
-    volumes:
-      - ./data/elasticsearch:/usr/share/elasticsearch/data
-
-  kibana:
-    image: kibana:7.3.1
-    container_name: kibana
-    ports:
-      - 5601:5601
-    environment:
-      ELASTICSEARCH_USER: elastic
-      I18N_LOCALE: zh-CN
-    depends_on: 
-      - elasticsearch
-      - logstash
-
-  logstash:
-    image: logstash:7.3.1
-    container_name: logstash
-    environment:
-      ELASTICSEARCH_HOST: localhost:9200
-      xpack.monitoring.enabled: "false"
-    volumes: 
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
-      
-    ports: 
-      - 9600:9600
-      - 5044:5044
-    depends_on: 
-      - elasticsearch
-
   # 每台机子上 
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.3.1
     container_name: filebeat
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
     environment:
       KIBANA_HOST: localhost:5601
       ELASTICSEARCH_HOST: localhost:9200
-    depends_on: 
-      - elasticsearch
